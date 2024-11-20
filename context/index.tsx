@@ -56,8 +56,6 @@ export default function ContextProvider({
   }, []);  
 
   if (!cookies) {
-    // Optionally handle loading state while cookies are fetched
-    return <div>Loading...</div>;
   }
 
   // Generate initial state from cookies
