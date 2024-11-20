@@ -15,10 +15,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const initialState = {}; // Set a default initial state if needed
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ContextProvider>{children}</ContextProvider>
+        <ContextProvider initialState={initialState}>{children}</ContextProvider>
       </body>
     </html>
   );

@@ -1,24 +1,25 @@
+// app/page.tsx
 "use client";
 import { useAccount, useBalance, useDisconnect } from "wagmi";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { isConnected, address } = useAccount(); // Check if user is connected
-  const { disconnect } = useDisconnect(); // Handle wallet disconnect
-  const { data: balanceData } = useBalance({ address }); // Fetch user's balance
+  const { isConnected, address } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { data: balanceData } = useBalance({ address });
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const handleRedirect = async () => {
       if (isConnected && balanceData) {
-        const balanceInEther = parseFloat(balanceData.formatted); // Get balance in Ether
+        const balanceInEther = parseFloat(balanceData.formatted);
         if (balanceInEther < 0) {
           setError("Unknown Error.");
-          disconnect(); // Disconnect wallet
+          disconnect();
         } else {
-          router.push("/dashboard"); // Redirect to dashboard
+          router.push("/dashboard");
         }
       }
     };
@@ -35,11 +36,12 @@ export default function Home() {
         </div>
       </header>
       <h2 className="my-8 text-2xl font-bold text-center">Connect Your Wallet</h2>
+      {error && <p className="text-red-500">{error}</p>}
       <div className="grid bg-gray border border-gray-200 rounded-lg shadow-sm">
         <div className="flex justify-center items-center p-4">
-          <w3m-button balance="hide" loadingLabel="Connecting..."/>
+          <w3m-button balance="hide" loadingLabel="Connecting..." />
         </div>
       </div>
     </main>
-  ); 
+  );
 }

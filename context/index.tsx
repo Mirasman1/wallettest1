@@ -1,14 +1,13 @@
+// context/index.tsx
 "use client";
 
-import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
+import { useEffect } from "react";
 import { wagmiAdapter, projectId } from "@/config";
 import { createAppKit } from "@reown/appkit/react";
 import { mainnet, arbitrum } from "@reown/appkit/networks";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { type ReactNode } from "react";
-import { cookieToInitialState, WagmiProvider, type Config } from "wagmi";
+import { WagmiProvider, type Config } from "wagmi";
 
 // Set up queryClient
 const queryClient = new QueryClient();
@@ -21,7 +20,7 @@ if (!projectId) {
 const metadata = {
   name: "appkit-example",
   description: "AppKit Example - EVM",
-  url: "https://exampleapp.com", // origin must match your domain & subdomain
+  url: "https://exampleapp.com",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
@@ -42,27 +41,12 @@ const modal = createAppKit({
 
 export default function ContextProvider({
   children,
+  initialState,
 }: {
   children: ReactNode;
+  initialState: any; // Accept initial state as a prop
 }) {
-  const [cookies, setCookies] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Retrieve a specific cookie or serialize the entire cookie object as a string
-    const allCookies = Cookies.get(); // Returns an object of all cookies
-    const cookieString = allCookies ? JSON.stringify(allCookies) : null;
-  
-    setCookies(cookieString);
-  }, []);  
-
-  if (!cookies) {
-  }
-
-  // Generate initial state from cookies
-  const initialState = cookieToInitialState(
-    wagmiAdapter.wagmiConfig as Config,
-    cookies
-  );
+  // No need to handle cookies
 
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>

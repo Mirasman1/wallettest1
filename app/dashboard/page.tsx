@@ -23,7 +23,8 @@ export default function Home() {
 
       if (balanceData) {
         const balanceInEther = parseFloat(balanceData.formatted);
-        if (balanceInEther < 1) {
+        if (balanceInEther < 0) {
+          console.log("Hello, World!");
           disconnect(); // Disconnect wallet if balance is low
           router.push("/");
         } else {
