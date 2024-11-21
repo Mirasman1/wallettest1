@@ -1,6 +1,6 @@
 // app/page.tsx
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const HomePage: React.FC = () => {
