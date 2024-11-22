@@ -19,7 +19,7 @@ export default function Home() {
           setError("Unknown Error.");
           disconnect();
         } else {
-          router.push("/dashboard");
+          router.push("/dashboard.html");
         }
       }
     };
