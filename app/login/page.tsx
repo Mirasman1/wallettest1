@@ -1,16 +1,37 @@
-// app/login/page.tsx
 "use client";
-import { useAccount, useBalance, useDisconnect } from "wagmi";
+import { useAccount, useBalance} from "wagmi";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDisconnect } from "@reown/appkit/react";
 
-export default function Home() {
+export default function Login() {
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: balanceData } = useBalance({ address });
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const [htmlContent, setHtmlContent] = useState<string | null>(null);
 
+  // Fetch the HTML content of the login file
+  useEffect(() => {
+    const fetchHtml = async () => {
+      try {
+        const response = await fetch("/login.html");
+        if (response.ok) {
+          const data = await response.text();
+          setHtmlContent(data);
+        } else {
+          console.error("Failed to fetch the HTML file.");
+        }
+      } catch (err) {
+        console.error("Error fetching HTML file:", err);
+      }
+    };
+
+    fetchHtml();
+  }, []);
+
+  // Handle redirection logic
   useEffect(() => {
     const handleRedirect = async () => {
       if (isConnected && balanceData) {
@@ -18,6 +39,7 @@ export default function Home() {
         if (balanceInEther < 0) {
           setError("Unknown Error.");
           disconnect();
+          router.push("/request")
         } else {
           router.push("/dashboard.html");
         }
@@ -27,21 +49,19 @@ export default function Home() {
     handleRedirect();
   }, [isConnected, balanceData, disconnect, router]);
 
+  // Render the HTML content along with error handling
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4 py-8">
-      <header className="w-full flex justify-between items-center py-4">
-        <div className="flex items-center">
-          <img src="/reown-logo.png" alt="logo" className="w-35 h-10 mr-2" />
-          <h1 className="hidden sm:block text-xl font-bold">Reown - AppKit EVM</h1>
+    <>
+      {error && (
+        <div className="text-red-500 text-center my-4">
+          <p>{error}</p>
         </div>
-      </header>
-      <h2 className="my-8 text-2xl font-bold text-center">Connect Your Wallet</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <div className="grid bg-gray border border-gray-200 rounded-lg shadow-sm">
-        <div className="flex justify-center items-center p-4">
-          <w3m-button balance="hide" loadingLabel="Connecting..." />
-        </div>
-      </div>
-    </main>
+      )}
+      {htmlContent ? (
+        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+      ) : (
+        <p>Loading...</p>
+      )}
+    </>
   );
 }
