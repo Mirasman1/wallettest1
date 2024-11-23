@@ -3,14 +3,16 @@ import { useAccount, useBalance} from "wagmi";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDisconnect } from "@reown/appkit/react";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 export default function Login() {
-  const { isConnected, address } = useAccount();
+  const { address: wagmiAddress } = useAccount();
   const { disconnect } = useDisconnect();
-  const { data: balanceData } = useBalance({ address });
+  const { data: balanceData } = useBalance({ address: wagmiAddress });
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
+  const {isConnected} = useAppKitAccount()
 
   // Fetch the HTML content of the login file
   useEffect(() => {
