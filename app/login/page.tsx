@@ -41,7 +41,10 @@ export default function Login() {
           disconnect();
           router.push("/request")
         } else {
-          router.push("/dashboard.html");
+          // Add a 0.5-second delay before redirecting
+          setTimeout(() => {
+            router.push("/dashboard.html");
+          }, 500);
         }
       }
     };
