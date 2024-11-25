@@ -6,13 +6,17 @@ import { useDisconnect } from "@reown/appkit/react";
 import { useAppKitAccount } from "@reown/appkit/react";
 
 export default function Login() {
-  const { address: wagmiAddress } = useAccount();
+  const { address } = useAccount();
   const { disconnect } = useDisconnect();
-  const { data: balanceData } = useBalance({ address: wagmiAddress });
+  const { data: balanceData } = useBalance({ address });
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const {isConnected} = useAppKitAccount()
+
+  // Generate the cookie value (wallet address + timestamp)
+  const now = Date.now(); // Current timestamp
+  const cookieValue = `${address}_${now}`;
 
   // Fetch the HTML content of the login file
   useEffect(() => {
@@ -43,10 +47,16 @@ export default function Login() {
           disconnect();
           router.push("/request")
         } else {
-          // Add a 0.5-second delay before redirecting
+          // Generate the cookie value (wallet address + timestamp)
+          const now = Date.now(); // Current timestamp
+          const cookieValue = `${address}_${now}`;
+    
+          // Set the cookie
+          document.cookie = `authToken=${cookieValue}; path=/; max-age=${60 * 60 * 1};`; // 1-day expiration
+
           setTimeout(() => {
-            router.push("/dashboard.html");
-          }, 500);
+            router.push("/dashboard.html"); // Redirect to dashboard
+          }, 500); // Delay of 0.5 seconds
         }
       }
     };
