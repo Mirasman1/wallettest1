@@ -20,6 +20,7 @@ if (!projectId) {
 const metadata = {
   name: "appkit-example",
   description: "AppKit Example - EVM",
+  url: "https://exampleapp.com",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
