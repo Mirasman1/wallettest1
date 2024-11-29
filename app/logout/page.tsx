@@ -17,7 +17,7 @@ export default function Logout() {
     }
 
     // Delete the auth_token cookie
-    document.cookie = "walletConnect=; path=/; max-age=0;";
+    document.cookie = "authToken=; path=/; max-age=0;";
 
     // Redirect to the homepage
     router.push('/');

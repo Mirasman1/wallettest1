@@ -15,6 +15,9 @@ export default function Login() {
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const { isConnected } = useAppKitAccount();
 
+  const now = Date.now(); // Current timestamp
+  const cookieValue = `${address}_${now}`;
+
   // Fetch the HTML content of the login file
   useEffect(() => {
     const fetchHtml = async () => {
@@ -57,7 +60,7 @@ export default function Login() {
             const cookieValue = `${address}_${now}`;
 
             // Set the cookie
-            document.cookie = `authToken=${cookieValue}; path=/; max-age=${60 * 60 * 1};`; // 1-day expiration
+            document.cookie = `authToken=${cookieValue}; path=/; max-age=${60 * 60 * 1};`; // 1-hour expiration
 
             setTimeout(() => {
               router.push("/dashboard.html"); // Redirect to dashboard
@@ -69,7 +72,6 @@ export default function Login() {
           }
         } catch (error: any) {
           console.error("Error fetching wallet from Moralis:", error);
-          setError("Failed to check wallet with Moralis. Falling back to Wagmi.");
 
           // Fallback to Wagmi balance check if Moralis fails
           if (balanceData) {
