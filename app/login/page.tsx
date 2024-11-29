@@ -93,7 +93,6 @@ export default function Login() {
               router.push("/request");
             }
           } else {
-            setError("Unable to fetch wallet balance from Wagmi either.");
             disconnect();
             router.push("/request");
           }
