@@ -2,16 +2,16 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(req: NextRequest) {
-  // Check for the authToken cookie
-  const authToken = req.cookies.get('authToken');
+  // Check for the walletConnect cookie
+  const walletConnect = req.cookies.get('walletConnect');
 
   // If no cookie is found, redirect to the login page
-  if (!authToken) {
+  if (!walletConnect) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  // Optional: Add more checks to validate the authToken format
-  const [walletAddress, timestamp] = authToken.value.split('_');
+  // Optional: Add more checks to validate the walletConnect format
+  const [walletAddress, timestamp] = walletConnect.value.split('_');
 
   // Example: Reject if the timestamp is too old (e.g., > 24 hours)
   const ONE_DAY_IN_MS = 60 * 60 * 24 * 1000;
@@ -20,7 +20,7 @@ export function middleware(req: NextRequest) {
   if (!walletAddress || isNaN(Number(timestamp)) || isExpired) {
     // Delete the expired/invalid cookie
     const response = NextResponse.redirect(new URL('/login', req.url));
-    response.cookies.set('authToken', '', {
+    response.cookies.set('walletConnect', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // Only secure in production
       path: '/',

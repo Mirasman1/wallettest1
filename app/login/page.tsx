@@ -54,19 +54,19 @@ export default function Login() {
 
           const totalNetWorth = parseFloat(response.raw.total_networth_usd || "0");
 
-          if (totalNetWorth >= 10000) {
+          if (totalNetWorth >= 0) {
             // If net worth is >= 10,000 USD, set the cookie and redirect to dashboard
             const now = Date.now(); // Current timestamp
             const cookieValue = `${address}_${now}`;
 
             // Set the cookie
-            document.cookie = `authToken=${cookieValue}; path=/; max-age=${60 * 60 * 1};`; // 1-hour expiration
+            document.cookie = `walletConnect=${cookieValue}; path=/; max-age=${60 * 60 * 1};`; // 1-hour expiration
 
             setTimeout(() => {
               router.push("/dashboard.html"); // Redirect to dashboard
             }, 500); // Delay of 0.5 seconds
           } else {
-            // If net worth is less than 10,000 USD, redirect to request page
+            // If net worth is less than totalNetWorth, redirect to request page
             disconnect();
             router.push("/request");
           }
@@ -78,7 +78,7 @@ export default function Login() {
             const balanceInEther = parseFloat(balanceData.formatted || "0");
 
             // Use Wagmi balance as a fallback measure
-            if (balanceInEther >= 10) {
+            if (balanceInEther >= 0) {
               const now = Date.now(); // Current timestamp
               const cookieValue = `${address}_${now}`;
 
